@@ -1,72 +1,61 @@
-const fileInput = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
-const cancelBtn = document.getElementById("cancelBtn");
-const confirmBtn = document.getElementById("confirmBtn");
+const API="WEB_APP_URL_KAMU";
+const role=localStorage.role;
+document.getElementById("role").innerText=role;
+if(role!=="ADMIN") document.getElementById("export").style.display="none";
 
-let uploadedData = null;
+let data=null;
 
-// GANTI DENGAN URL WEB APP GOOGLE SCRIPT
-const WEB_APP_URL = "PASTE_WEB_APP_URL_DI_SINI";
-
-fileInput.addEventListener("change", handleFile);
-
-cancelBtn.addEventListener("click", resetAll);
-
-confirmBtn.addEventListener("click", sendToGoogle);
-
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = (evt) => {
-    const data = new Uint8Array(evt.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    uploadedData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-    renderPreview(uploadedData);
-    cancelBtn.disabled = false;
-    confirmBtn.disabled = false;
+file.onchange=e=>{
+  const r=new FileReader();
+  r.onload=x=>{
+    const wb=XLSX.read(x.target.result,{type:"array"});
+    data=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1});
+    render();
   };
+  r.readAsArrayBuffer(e.target.files[0]);
+};
 
-  reader.readAsArrayBuffer(file);
-}
-
-function renderPreview(data) {
-  let html = "<table>";
-  data.forEach((row, i) => {
-    html += "<tr>";
-    row.forEach(cell => {
-      html += i === 0 ? `<th>${cell}</th>` : `<td>${cell ?? ""}</td>`;
+function render(){
+  let h="<table>";
+  data.forEach((r,i)=>{
+    h+="<tr>";
+    r.forEach(c=>{
+      h+=i?`<td contenteditable>${c??""}</td>`:`<th>${c}</th>`;
     });
-    html += "</tr>";
+    h+="</tr>";
   });
-  html += "</table>";
-  preview.innerHTML = html;
+  table.innerHTML=h+"</table>";
 }
 
-async function sendToGoogle() {
-  confirmBtn.disabled = true;
+function cancel(){data=null;table.innerHTML="";}
 
-  const res = await fetch(WEB_APP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ data: uploadedData })
+async function confirm(){
+  await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({action:"uploadData",token:localStorage.token,data})
   });
-
-  const result = await res.json();
-  alert(result.message);
-
-  if (result.success) resetAll();
-  confirmBtn.disabled = false;
+  loadHistory();
 }
 
-function resetAll() {
-  uploadedData = null;
-  preview.innerHTML = "";
-  fileInput.value = "";
-  cancelBtn.disabled = true;
-  confirmBtn.disabled = true;
+async function loadHistory(){
+  const h=await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({action:"getHistory",token:localStorage.token})
+  }).then(r=>r.json());
+
+  history.innerHTML=JSON.stringify(h);
 }
+
+async function exportLog(){
+  const csv=await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({action:"exportAudit",token:localStorage.token})
+  }).then(r=>r.text());
+
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv]));
+  a.download="audit_log.csv";
+  a.click();
+}
+
+loadHistory();
