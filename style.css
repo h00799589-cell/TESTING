@@ -1,66 +1,10 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #020617;
-  color: #e5e7eb;
-}
-
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #020617;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,.4);
-}
-
-h2 {
-  margin-bottom: 15px;
-}
-
-input[type="file"] {
-  margin-bottom: 15px;
-}
-
-.actions {
-  margin-bottom: 15px;
-}
-
-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-right: 8px;
-  font-weight: bold;
-}
-
-#confirmBtn {
-  background: #16a34a;
-  color: #fff;
-}
-
-#cancelBtn {
-  background: #dc2626;
-  color: #fff;
-}
-
-button:disabled {
-  opacity: .4;
-  cursor: not-allowed;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-th, td {
-  border: 1px solid #334155;
-  padding: 6px;
-  font-size: 14px;
-}
-
-th {
-  background: #1e293b;
-}
+body{background:#020617;color:#e5e7eb;font-family:Inter,Arial}
+.container{max-width:1100px;margin:40px auto;padding:20px}
+input,button{padding:10px;border-radius:6px;border:none}
+button{cursor:pointer;font-weight:600}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #334155;padding:6px}
+td{background:#020617}
+td[contenteditable]{background:#020617}
+.admin{color:#22c55e}
+.staff{color:#60a5fa}
