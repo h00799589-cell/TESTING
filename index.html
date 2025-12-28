@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Spreadsheet Upload System</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<script>
+if(!localStorage.token) location.href="login.html";
+</script>
 
 <div class="container">
-  <h2>Upload Excel / CSV ke Spreadsheet</h2>
+  <h2>Upload Panel (<span id="role"></span>)</h2>
 
-  <input type="file" id="fileInput" accept=".xlsx,.csv">
+  <input type="file" id="file"><br><br>
+  <button onclick="cancel()">Cancel</button>
+  <button onclick="confirm()">Confirm</button>
 
-  <div class="actions">
-    <button id="cancelBtn" disabled>Cancel</button>
-    <button id="confirmBtn" disabled>Confirm Upload</button>
-  </div>
+  <div id="table"></div>
 
-  <div id="preview"></div>
+  <h3>Upload History</h3>
+  <div id="history"></div>
+
+  <button id="export" onclick="exportLog()">Export Audit</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="script.js"></script>
-</body>
-</html>
