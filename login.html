@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>Login System</h2>
+  <input id="u" placeholder="Username"><br><br>
+  <input id="p" type="password" placeholder="Password"><br><br>
+  <button onclick="go()">Login</button>
+</div>
+
+<script>
+const API="WEB_APP_URL_KAMU";
+
+async function go(){
+  const r=await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({action:"login",username:u.value,password:p.value})
+  }).then(r=>r.json());
+
+  if(r.ok){
+    localStorage.token=r.token;
+    localStorage.role=r.role;
+    localStorage.user=r.username;
+    location.href="index.html";
+  } else alert("Login gagal");
+}
+</script>
